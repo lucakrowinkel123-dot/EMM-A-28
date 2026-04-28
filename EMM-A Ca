@@ -61,6 +61,7 @@ double goToBubbleOffsetMeters = 150;
 double goToBubbleRadiusMeters = 750;
 int fullAutoRetryTicks = 180; // retries when no valid Fullauto target is available
 double mineStationarySpeedMps = 0.20;
+double goToApproachSpeedMps   = 50;
 int mineStationaryConfirmTicks = 30;
 string indicatorLightName = "EMM-A Ca Indicator light";
 double indicatorLightDelaySeconds = 0.5;
@@ -1542,6 +1543,7 @@ void HandleGoTo(string argument)
     Runtime.UpdateFrequency = tickSpeed;
     goToMode         = true;
     goToStage        = 1;
+    activeMaxSpeed   = goToApproachSpeedMps;
     pathMode         = false;
     pathPaused       = false;
     pathPausedNavResume = false;
@@ -1576,8 +1578,9 @@ void UpdateGoToRunner()
 
     if (goToStage == 2 && IsAtTargetPose(_goToFinalPosition, _goToFinalForward, _goToFinalUp))
     {
-        goToMode      = false;
-        goToStage     = 0;
+        goToMode       = false;
+        goToStage      = 0;
+        activeMaxSpeed = 0;
         Echo("GoTo: final pose reached.");
     }
 }
